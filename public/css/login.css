@@ -1,0 +1,489 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+}
+
+.login_page{
+    max-width: 100vw;
+    min-height: 100vh;
+    /* background: #2e2e2e; */
+    display: flex;
+    justify-content: center;
+    background: #2e2e2e;
+    overflow-x: hidden;
+}
+
+.panda{
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    margin-top: 250px;
+}
+
+.panda_head{
+    width:  100px;
+    height: 100px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    margin-top: 20px;
+}
+
+.panda_ear{
+    position: relative;
+    display: flex;
+    gap: 20px;
+}
+
+.ear{
+    width:  52px;
+    height: 52px;
+    background: #ffffff;
+    border-radius: 50% ;
+}
+
+.ear::after{
+    position: absolute;
+    content: "";
+    width:  39px;
+    height: 39px;
+    background: #292929;
+    border-radius: 50% ;
+    margin: 6px;
+}
+
+.panda_eye{
+    /* background: #eee; */
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.left_eye{
+    transform: rotate(19deg);
+}
+.right_eye{
+    transform: rotate(-19deg);
+}
+
+.eye{
+    width:  27px;
+    height: 40px;
+    background: #2e2e2e;
+    border-radius: 33px 33px 27px 27px;
+}
+
+.eye{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.eye_ball{
+    width:  18px;
+    height: 18px;
+    margin: 7px 3px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eye_black{
+    width:  12px;
+    height: 12px;
+    background: #2e2e2e;
+    border-radius: 50%;
+}
+
+.pand_nose{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 0px;
+}
+
+.nose{
+    width: 25px;
+    height: 20px;
+    background: #2e2e2e;
+    border-radius: 25px 25px 20px 20px;
+}
+
+.pand_mouth{
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.lip{
+    width: 30px;
+    height: 20px;
+    border-bottom: 3px solid #292929;
+    border-radius: 50%;
+    margin-top: -10px;
+    transform: rotate(15deg);
+}
+
+.lip:nth-child(1){
+    transform: rotate(-15deg);
+}
+
+.lip:nth-child(2){
+    position: absolute;
+    transform: rotate(0deg);
+    margin-top: -6px;
+    width: 20px;
+}
+
+.form{
+    width:  250px;
+    height: 150px;
+    background: #ffffff;
+    position: absolute;
+    margin-top: 100px;
+    border-radius: 5px;
+    z-index: 2;
+    box-shadow: 0px 0px 5px ;
+    display: flex;
+    align-items: center;
+    transition: all .5s;
+}
+
+.panda_body{
+    width: 150px;
+    height: 170px;
+    background: #ffffff;
+    position: absolute;
+    z-index: 1;
+    border-radius: 170px 170px 120px 120px;
+    margin-top: 110px;
+}
+
+.panda_foot{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 20px;
+}
+
+.foot{
+    width: 50px;
+    height: 70px;
+    background: #ddd;
+    z-index: 3;
+    border-radius: 50px 50px 80px 80px;
+    background: #141414;
+    box-shadow: 0px 0px 10px #2e2e2e;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.left_foot{
+    margin-left: 40px;
+    transform: rotate(-10deg);
+}
+
+.rigth_foot{
+    margin-right: 40px;
+    transform: rotate(10deg);
+}
+
+.inner_foots{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 5px;
+}
+
+.foot1, .foot2, .foot3{
+    width: 10px;
+    height: 20px;
+    background: #ddd;
+    border-radius: 50%;
+}
+
+.foot2{
+    height: 20px;
+}
+
+.foot3{
+    height: 25px;
+    width: 12px;
+}
+
+.big_foot{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.big{
+    width: 32px;
+    height: 35px;
+    background: #ddd;
+    border-radius: 20px;
+    margin-top: -10px;
+}
+
+.hand{
+    width: 30px;
+    height: 40px;
+    margin-top: -60px;
+    position: absolute;
+}
+
+.left_hand{
+    left: -10px;
+}
+
+.rigth_hand{
+    right: -10px;
+}
+
+.finger{
+    width: 100%;
+    height: 17px;
+    border-radius: 20px;
+    background: #141414;
+    box-shadow: 0px 0px 10px ;
+}
+
+.finger:nth-child(n+1){
+    margin-top: -4px;
+}
+
+.input_form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 250px;
+    height: 150px;
+    /* background: #ddd; */
+}
+
+.input_field{
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 15px;
+}
+
+label{
+    position: absolute;
+    left: 0;
+    margin-top: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #292929;
+    transition: all .3s;
+}
+
+.input_field.active label{
+    margin-top: -30px;
+    color: #292929;
+}
+
+input{
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #292929;
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    outline: none;
+    margin-top: 5px;
+}
+
+.login{
+    padding: 12px;
+    border: none;
+    width: 85px;
+    border-radius: 25px;
+    background: #292929;
+    color: #fff;
+    cursor: pointer;
+}
+
+.form.active{
+    transform: translateY(-45px);
+}
+
+.cloud_box{
+    width: 250px;
+    height: 250px;
+    position: absolute;
+    /* background: #ddd; */
+    top:   -190px;
+    right: -170px;
+    display: flex;
+    display: none;
+}
+
+.inner_cloud{
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+    opacity: 0;
+}
+
+.inner_cloud:nth-child(2){
+    height: 87%;
+}
+
+.inner_cloud:nth-child(3){
+    height: 70%;
+    margin-left: -10px;
+    margin-top: 10px;
+}
+
+.small_cloud{
+    width:  25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.medium_cloud{
+    width:  35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.medium_cloud2{
+    width:  45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #fff; 
+}
+
+.big_cloud{
+    width:  150px;
+    height: 150px;
+    background: #fff;
+    border-radius: 50%;
+    margin-top: -10px;
+    z-index: 1;
+    color: #141414;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("assets/img/cloud.png");
+    background-size: 100% 100%;
+}
+
+.text{
+    width: 60%;
+}
+
+@keyframes antiRotate {
+    0%{
+        border-radius: 100px 70px;
+    }100%{
+        transform: rotate(-360deg);
+        border-radius: 70px 100px;
+    }
+}
+
+@keyframes rotate {
+    0%{
+        border-radius: 70px 100px;
+    }100%{
+        transform: rotate(360deg);
+        border-radius: 100px 70px;
+    }
+}
+
+.big_cloud::after{
+    position: absolute;
+    content: "";
+    width: 190px;
+    height: 170px;
+    border: 2px solid #ddd;
+    margin-top:  -11px;
+    margin-left: -11px;
+    animation: rotate 3s linear infinite;
+    background: transparent;
+}
+
+.big_cloud::before{
+    position: absolute;
+    content: "";
+    width: 170px;
+    height: 190px;
+    border: 2px solid #ddd;
+    margin-top:  -11px;
+    margin-left: -11px;
+    animation: antiRotate 3s linear infinite;
+    background: transparent;
+}
+
+.inner_cloud:last-child{
+    align-items: flex-start;
+    justify-content: center;
+}
+
+@keyframes flow {
+    0%{
+        margin-top: 30px;
+        opacity: 0;
+    }100%{
+       margin-top: 10px;
+       opacity: 1;
+    }
+}
+
+.cloud_box.active{
+    display: flex;
+}
+
+.cloud_box.active .inner_cloud{
+    display: flex;
+    animation: flow .2s ease-in forwards;
+    animation-delay: .1s;
+}
+
+.cloud_box.active .inner_cloud:nth-child(2){
+    animation-delay: .3s;
+}
+
+.cloud_box.active .inner_cloud:nth-child(3){
+    animation-delay: .6s;
+}
+
+.cloud_box.active .inner_cloud:nth-child(4){
+    animation-delay: .9s;
+}
+
+@media screen and (max-width:730px) {
+    .cloud_box {
+        right: -54px;
+        display: flex;
+    }
+}
+
+@media screen and (max-width:500px) {
+    .cloud_box {
+        right: 40px;
+        flex-direction: row-reverse;
+        transform: rotate(45deg);
+    }
+}
