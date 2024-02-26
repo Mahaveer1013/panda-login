@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
 
-mongoose.connect('mongodb+srv://vinothg0618:vinoth112003@cluster0.fiy26nf.mongodb.net/quiz_data', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://vinothg0618:vinoth112003@cluster0.fiy26nf.mongodb.net/quiz_data');
 const db = mongoose.connection;
 
 db.once('open', () => {
