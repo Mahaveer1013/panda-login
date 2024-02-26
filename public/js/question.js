@@ -1,13 +1,79 @@
 // Global variables
 let team_id = document.getElementById("team_id").value;
+let currentindex = 0;
 let masks = document.querySelectorAll('.mask');
 let questionContainer = document.querySelector('.questio_container .question');
 let optionsContainer = document.querySelector('.questio_container .question_options');
 let submitButton = document.querySelector('.questio_container .buttons .submit');
+let quessButton = optionsContainer.querySelector(".optionsContainer");
+let quessInput = optionsContainer.querySelector("#guessImage");
+let closeguess = optionsContainer.querySelector(".closeguess");
 let currentQuestionResponse; // Variable to store the current question response
+let answeredQuestions = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+];
 
-// Array to track answered questions
-let answered_questions = new Array(masks.length).fill(false);
+if (JSON.parse(localStorage.getItem("answeredQuestions"))) {
+    answeredQuestions =  JSON.parse(localStorage.getItem("answeredQuestions"));
+}
+
+if (localStorage.getItem("currentindex")) {
+    currentindex = localStorage.getItem("currentindex");
+    console.log(currentindex);
+}
+
+function submitGuess(){
+    console.log(optionsContainer.querySelector("#guessImage").value)
+}
+
+function displayGuess(){
+    questionContainer.textContent = "Guess the image...?";
+    optionsContainer.innerHTML = (`
+        <button class="closeguess" onclick="closeGuess()">X</button> 
+        <input type="text" name="quessImage" id="guessImage"> 
+        <br>
+        <button class="guessButton"  onclick="submitGuess()">guess</button> 
+    `);
+    submitButton.style.display = "none"
+}
+
+function closeGuess(){
+    submitButton.style.display = "block"
+    let newIndex = answeredQuestions.indexOf(false);
+        if (newIndex != -1) {
+            getQuestionDetails(newIndex);
+        }else{
+            optionsContainer.innerHTML = ` 
+                <p class="highlight"><i class="fas fa-hand-point-right"></i> No more Options you have .... you have failed to found the image...😭 </p>
+            `
+        }
+}
+function checkAnswers(){
+    masks.forEach(function(mask, index){
+        if (answeredQuestions[index] == true) {
+            mask.classList.add("active");
+        }else{
+            mask.classList.remove("active");
+        }
+    })
+}
+
+checkAnswers()
 
 // Function to send attempt update
 function sendAttemptUpdate(teamId) {
@@ -91,14 +157,45 @@ function displayQuestion(question) {
         optionsContainer.appendChild(document.createElement('br'));
     });
 
+    submitButton.style.display = "block"
     submitButton.disabled = false;
 }
+
+function updateAnsweredQuestions(userId, questionIndex, value) {
+    // Convert the boolean value to a string
+    const boolValue = value.toString();
+    
+    fetch(`/updateAnsweredQuestions/${userId}/${questionIndex}/${boolValue}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Network response was not ok.');
+    })
+    .then(updatedUser => {
+        // Optionally, handle the response from the backend
+        answeredQuestions = (updatedUser.AnsweredQuestions);
+        localStorage.setItem("answeredQuestions",JSON.stringify(answeredQuestions));
+        checkAnswers();
+    })
+    .catch(error => {
+        console.error('Error updating answered questions:', error);
+    });
+}
+
 
 // Event listener for mask click
 document.addEventListener('DOMContentLoaded', function() {
     masks.forEach(function(mask, index) {
         mask.addEventListener('click', function() {
             console.log("Index:", index);
+            currentindex = index;
+            localStorage.setItem("currentindex",currentindex)
             getQuestionDetails(index);
         });
     });
@@ -111,8 +208,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 let selectedValue = selectedOption.value;
                 if (selectedValue === currentQuestionResponse.question['Answer']) {
                     sendScoreUpdate(team_id, 10);
+                    displayGuess();
+                    updateAnsweredQuestions(team_id, currentindex, true);
                 } else {
                     sendAttemptUpdate(team_id);
+                    updateAnsweredQuestions(team_id, currentindex, false);
                 }
             } else {
                 alert("Please select an option.");

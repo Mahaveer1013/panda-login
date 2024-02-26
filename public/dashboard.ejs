@@ -11,24 +11,17 @@
 <body>
     <div class="page">
         <div class="container">
-            <h1>Welcome to the Dashboard</h1>
             <% if (team) { %>
                 <p>Team Name: <%= team.team_name %></p>
                 <input type="hidden" id="team_name" value="<%= team.team_name %>">
                 <input type="hidden" id="team_id" value="<%= team._id %>">
-                <p>Questions: <%= team.questions.length %></p>
-                <!-- <ul>
-                    <% team.questions.forEach(question => { %>
-                        <li><%= question.Question %></li>
-                    <% }); %>
-                </ul> -->
             <% } else { %>
                 <p>No team details found.</p>
             <% } %>
             
         </div>
         <input type="hidden" id="hiddenInput" value="0">
-        <header class="header" style="display: none;">
+        <header class="header">
             <div class="event">Lucky Draw</div>
             <div class="timer">
                 <div class="time_icon">
@@ -54,7 +47,7 @@
                 </li>
             </ul>
         </header>
-        <aside class="side_bar active"  style="display: none;">
+        <aside class="side_bar active">
             <button class="side_button">
                 <i class="fas fa-chevron-right"></i>
                 <i class="fas fa-chevron-left"></i>
@@ -166,6 +159,8 @@
                 </div>
                 <div class="question_options">
                     <div>
+
+                        <br>
                         Your options to the related questions will appears here ! 
                         <br>
                         <p class="highlight"><i class="fas fa-hand-point-right"></i> You have to find the 3 images totally</p>

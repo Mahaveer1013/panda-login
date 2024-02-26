@@ -33,7 +33,7 @@ const teamSchema = new mongoose.Schema({
         "Option C": String,
         Answer: String,
     }],
-    AnsweredQuestions: [Boolean],
+    AnsweredQuestions: {type: [Boolean], default: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]},
     images_found: { type: Number, default: 0 },
     attempts: { type: Number, default: 0 },
     score: { type: Number, default: 0 }
@@ -173,6 +173,28 @@ app.put('/updateAttempt', async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 });
+
+// Backend route to handle updating answered questions
+// Backend route to handle updating answered questions
+app.put('/updateAnsweredQuestions/:userId/:questionIndex/:boolValue', async (req, res) => {
+    const { userId, questionIndex, boolValue } = req.params;
+    try {
+        const user = await Team.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        // Update AnsweredQuestions array
+        user.AnsweredQuestions[questionIndex] = boolValue;
+        // Save updated user data back to the database
+        const updatedUser = await user.save();
+        res.json(updatedUser);
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+
 
 app.get('/logout', (req, res) => {
     // Destroy the session
