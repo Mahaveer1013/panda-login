@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Font Awesome CSS via CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous">
+</head>
+<body>
+    <div class="page">
+        <div class="container">
+            <h1>Welcome to the Dashboard</h1>
+            <% if (team) { %>
+                <p>Team Name: <%= team.team_name %></p>
+                <input type="hidden" id="team_name" value="<%= team.team_name %>">
+                <input type="hidden" id="team_id" value="<%= team._id %>">
+                <p>Questions: <%= team.questions.length %></p>
+                <!-- <ul>
+                    <% team.questions.forEach(question => { %>
+                        <li><%= question.Question %></li>
+                    <% }); %>
+                </ul> -->
+            <% } else { %>
+                <p>No team details found.</p>
+            <% } %>
+            
+        </div>
+        <input type="hidden" id="hiddenInput" value="0">
+        <header class="header" style="display: none;">
+            <div class="event">Lucky Draw</div>
+            <div class="timer">
+                <div class="time_icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="timer_count">09:30</div>
+            </div>
+            <ul class="profile-container">
+                <li class="profile">
+                    <div class="inner_profile">
+                        <img src="/assets/img/profile-male.png" alt="">
+                    </div>
+                </li>
+                <li class="menu_options">
+                    <p class="option" href="#">
+                        <i class="fas fa-users"></i>
+                        Team Name
+                    </p>
+                    <a class="option" href="/logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        logout
+                    </a>
+                </li>
+            </ul>
+        </header>
+        <aside class="side_bar active"  style="display: none;">
+            <button class="side_button">
+                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <ul class="activities_list">
+                <li class="activity">
+                    <div class="activity_title">Images Found</div>
+                    <div class="activity_value imagefound">00</div>
+                </li>
+                <li class="activity">
+                    <div class="activity_title">Score</div>
+                    <div class="activity_value score">00</div>
+                </li>
+                <li class="activity">
+                    <div class="activity_title">Attempts</div>
+                    <div class="activity_value attempts">00</div>
+                </li>
+            </ul>
+        </aside>
+        <main class="main" style="display: flex;">
+            <div class="image_container">
+                <img src="/assets/img/img1.png" alt="image" class="image">
+                <ul class="image_mask">
+                    <button class="mask" index="0">
+                        <div class="icon">
+                            <i class="fas fa-grin-squint-tears"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="1">
+                        <div class="icon">
+                            <i class="fas fa-grin-wink"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="2">
+                        <div class="icon">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="3">
+                        <div class="icon">
+                            <i class="fas fa-grin-hearts"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="4">
+                        <div class="icon">
+                            <i class="fas fa-laugh-wink"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="5">
+                        <div class="icon">
+                            <i class="fas fa-laugh-wink"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="6">
+                        <div class="icon">
+                            <i class="fas fa-grin-hearts"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="7">
+                        <div class="icon">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="8">
+                        <div class="icon">
+                            <i class="fas fa-grin-wink"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="9">
+                        <div class="icon">
+                            <i class="fas fa-grin-squint-tears"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="10">
+                        <div class="icon">
+                            <i class="fas fa-grin-wink"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="11">
+                        <div class="icon">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="12">
+                        <div class="icon">
+                            <i class="fas fa-grin-hearts"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="13">
+                        <div class="icon">
+                            <i class="fas fa-laugh-wink"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="14">
+                        <div class="icon">
+                            <i class="fas fa-laugh-wink"></i>
+                        </div>
+                    </button>
+                    <button class="mask" index="15">
+                        <div class="icon">
+                            <i class="fas fa-grin-hearts"></i>
+                        </div>
+                    </button>
+                </ul>
+            </div>
+            <div class="questio_container">
+                <div class="question_title">
+                    <i class="fas fa-question-circle"></i> <div class="question">Questions will appears here !</div>
+                </div>
+                <div class="question_options">
+                    <div>
+                        Your options to the related questions will appears here ! 
+                        <br>
+                        <p class="highlight"><i class="fas fa-hand-point-right"></i> You have to find the 3 images totally</p>
+                        <p class="highlight"><i class="fas fa-hand-point-right"></i> The count of images found will be consider to select winner</p>
+                        <p class="highlight"><i class="fas fa-hand-point-right"></i> Time taken to find the image will be consider to select winner</span>
+                    </div>
+                    <!-- <label>
+                        <input type="radio" name="option" id="" class="radioBtn"> Option 1
+                    </label>
+                    <label>
+                        <input type="radio" name="option" id="" class="radioBtn"> Option 2
+                    </label>
+                    <label>
+                        <input type="radio" name="option" id="" class="radioBtn"> Option 3
+                    </label> -->
+                </div>
+                <div class="buttons">
+                    <button class="submit" disabled>submit</button>
+                </div>
+            </div>
+        </main>
+        <audio id="correctAudio" src="/assets/audio/points.mp3"></audio>
+        <audio id="wrongAudio" src="/assets/audio/loss.mp3"></audio>
+        <audio id="victoryAudio" src="/assets/audio/victory1.mp3"></audio>
+
+
+    </div>
+    
+    <!-- <script src="js/dashboard.js"></script> -->
+    <script src="js/question.js"></script>
+</body>
+</html>
