@@ -1,33 +1,17 @@
+// Global variables
 let team_id = document.getElementById("team_id").value;
-var masks = document.querySelectorAll('.mask');
-var questionContainer = document.querySelector('.questio_container .question');
-var optionsContainer = document.querySelector('.questio_container .question_options');
-var submitButton = document.querySelector('.questio_container .buttons .submit');
+let masks = document.querySelectorAll('.mask');
+let questionContainer = document.querySelector('.questio_container .question');
+let optionsContainer = document.querySelector('.questio_container .question_options');
+let submitButton = document.querySelector('.questio_container .buttons .submit');
+let currentQuestionResponse; // Variable to store the current question response
 
-let answered_qustions = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-]
-
-console.log(answered_qustions.length)
+// Array to track answered questions
+let answered_questions = new Array(masks.length).fill(false);
 
 // Function to send attempt update
 function sendAttemptUpdate(teamId) {
-    var updateAttemptXhr = new XMLHttpRequest();
+    let updateAttemptXhr = new XMLHttpRequest();
     updateAttemptXhr.open('PUT', '/updateAttempt', true);
     updateAttemptXhr.setRequestHeader('Content-Type', 'application/json');
     updateAttemptXhr.onreadystatechange = function() {
@@ -42,11 +26,9 @@ function sendAttemptUpdate(teamId) {
     updateAttemptXhr.send(JSON.stringify({ teamId: teamId }));
 }
 
-
-
 // Function to send score update
 function sendScoreUpdate(teamId, increment) {
-    var updateScoreXhr = new XMLHttpRequest();
+    let updateScoreXhr = new XMLHttpRequest();
     updateScoreXhr.open('PUT', '/updateScore', true);
     updateScoreXhr.setRequestHeader('Content-Type', 'application/json');
     updateScoreXhr.onreadystatechange = function() {
@@ -63,12 +45,12 @@ function sendScoreUpdate(teamId, increment) {
 
 // Function to get question details
 function getQuestionDetails(index) {
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open('GET', '/question/' + index, true);
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
-                var response;
+                let response;
                 try {
                     response = JSON.parse(xhr.responseText);
                     console.log("Response:", response);
@@ -77,6 +59,7 @@ function getQuestionDetails(index) {
                     return;
                 }
                 if (response.success) {
+                    currentQuestionResponse = response; // Store the response
                     displayQuestion(response.question);
                 } else {
                     console.error("Error:", response.message);
@@ -92,13 +75,12 @@ function getQuestionDetails(index) {
 // Function to display question details
 function displayQuestion(question) {
     questionContainer.textContent = question.Question;
-
     optionsContainer.innerHTML = '';
 
-    var optionKeys = ['Option A', 'Option B', 'Option C'];
+    let optionKeys = ['Option A', 'Option B', 'Option C'];
     optionKeys.forEach(function(key) {
-        var optionLabel = document.createElement('label');
-        var optionInput = document.createElement('input');
+        let optionLabel = document.createElement('label');
+        let optionInput = document.createElement('input');
         optionInput.type = 'radio';
         optionInput.name = 'option';
         optionInput.value = key;
@@ -114,10 +96,8 @@ function displayQuestion(question) {
 
 // Event listener for mask click
 document.addEventListener('DOMContentLoaded', function() {
-
-    masks.forEach(function(mask) {
+    masks.forEach(function(mask, index) {
         mask.addEventListener('click', function() {
-            var index = this.getAttribute('index');
             console.log("Index:", index);
             getQuestionDetails(index);
         });
@@ -125,16 +105,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle submission of the answer
     submitButton.onclick = function() {
-        var selectedOption = optionsContainer.querySelector('input[name="option"]:checked');
-        if (selectedOption) {
-            var selectedValue = selectedOption.value;
-            if (selectedValue === response.question['Answer']) {
-                sendScoreUpdate(team_id, 10);
+        if (currentQuestionResponse) {
+            let selectedOption = optionsContainer.querySelector('input[name="option"]:checked');
+            if (selectedOption) {
+                let selectedValue = selectedOption.value;
+                if (selectedValue === currentQuestionResponse.question['Answer']) {
+                    sendScoreUpdate(team_id, 10);
+                } else {
+                    sendAttemptUpdate(team_id);
+                }
             } else {
-                sendAttemptUpdate(team_id);
+                alert("Please select an option.");
             }
         } else {
-            alert("Please select an option.");
+            console.error("No question response available.");
         }
     };
 });
