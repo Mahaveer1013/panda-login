@@ -11,14 +11,6 @@
 <body>
     <div class="page">
         <div class="container">
-            <% if (team) { %>
-                <p>Team Name: <%= team.team_name %></p>
-                <input type="hidden" id="team_name" value="<%= team.team_name %>">
-                <input type="hidden" id="team_id" value="<%= team._id %>">
-            <% } else { %>
-                <p>No team details found.</p>
-            <% } %>
-            
         </div>
         <input type="hidden" id="hiddenInput" value="0">
         <header class="header">
@@ -38,7 +30,13 @@
                 <li class="menu_options">
                     <p class="option" href="#">
                         <i class="fas fa-users"></i>
-                        Team Name
+                        <% if (team) { %>
+                            <%= team.team_name %>
+                            <input type="hidden" id="team_name" value="<%= team.team_name %>">
+                            <input type="hidden" id="team_id" value="<%= team._id %>">
+                        <% } else { %>
+                            No team details found.
+                        <% } %>
                     </p>
                     <a class="option" href="/logout">
                         <i class="fas fa-sign-out-alt"></i>
@@ -156,6 +154,9 @@
             <div class="questio_container">
                 <div class="question_title">
                     <i class="fas fa-question-circle"></i> <div class="question">Questions will appears here !</div>
+                </div>
+                <div class="load_question">
+                    <div class="circle"></div>
                 </div>
                 <div class="question_options">
                     <div>

@@ -39,6 +39,11 @@ let side_button = document.querySelector(".side_button");
 let side_bar = document.querySelector(".side_bar");
 let main = document.querySelector(".main");
 
+side_button.addEventListener("click",()=>{
+    side_button.classList.toggle("active");
+    side_bar.classList.toggle("active");
+    main.classList.toggle("active");
+});
 
 if (JSON.parse(localStorage.getItem("answeredQuestions"))) {
     answeredQuestions =  JSON.parse(localStorage.getItem("answeredQuestions"));
@@ -126,6 +131,7 @@ function sendScoreUpdate(teamId, increment) {
 // Function to get question details
 function getQuestionDetails(index) {
     let xhr = new XMLHttpRequest();
+    document.querySelector(".load_question").classList.add("active");
     xhr.open('GET', '/question/' + index, true);
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -134,6 +140,7 @@ function getQuestionDetails(index) {
                 try {
                     response = JSON.parse(xhr.responseText);
                     console.log("Response:", response);
+                    document.querySelector(".load_question").classList.remove("active");
                 } catch (error) {
                     console.error("Error parsing response:", error);
                     return;

@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
+// const sha256 = require('sha256');
 
 mongoose.connect('mongodb+srv://vinothg0618:vinoth112003@cluster0.fiy26nf.mongodb.net/quiz_data');
 const db = mongoose.connection;
@@ -48,7 +49,7 @@ app.set('views', path.join(__dirname, 'public'));
 
 
 app.use(session({
-    secret: 'your-secret-key', // Change this to a strong secret key
+    secret: '0987654321wertyuiosdfghjklzxcvbnm', // Change this to a strong secret key
     resave: false,
     saveUninitialized: true
 }));
