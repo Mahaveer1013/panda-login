@@ -28,6 +28,18 @@ let answeredQuestions = [
     false
 ];
 
+
+let profile = document.querySelector(".profile");
+
+profile.addEventListener("click", ()=>{
+    document.querySelector(".menu_options").classList.toggle("active");
+});
+
+let side_button = document.querySelector(".side_button");
+let side_bar = document.querySelector(".side_bar");
+let main = document.querySelector(".main");
+
+
 if (JSON.parse(localStorage.getItem("answeredQuestions"))) {
     answeredQuestions =  JSON.parse(localStorage.getItem("answeredQuestions"));
 }
@@ -83,6 +95,7 @@ function sendAttemptUpdate(teamId) {
     updateAttemptXhr.onreadystatechange = function() {
         if (updateAttemptXhr.readyState === XMLHttpRequest.DONE) {
             if (updateAttemptXhr.status === 200) {
+                checkAnswers()
                 console.log("Attempt updated successfully");
             } else {
                 console.error("Error updating attempt:", updateAttemptXhr.status);
@@ -101,6 +114,7 @@ function sendScoreUpdate(teamId, increment) {
         if (updateScoreXhr.readyState === XMLHttpRequest.DONE) {
             if (updateScoreXhr.status === 200) {
                 console.log("Score updated successfully");
+                checkAnswers();
             } else {
                 console.error("Error updating score:", updateScoreXhr.status);
             }

@@ -509,6 +509,13 @@
 
 .closeguess{
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: purple;
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
 }
