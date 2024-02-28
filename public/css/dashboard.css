@@ -185,7 +185,6 @@
     padding: 10px;
     transition: all .3s;
     display: flex;
-    align-items: center;
     justify-content: center;
     gap: 15px;
     overflow: hidden;
@@ -320,6 +319,43 @@
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
+    z-index: 0;
+}
+
+.questio_container.active{
+    position: absolute;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    z-index: 50;
+}
+
+.full_screen{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    color: purple;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.full_screen .fas.fa-expand-arrows-alt{
+    display: inline-block;
+}
+
+.full_screen.active .fas.fa-expand-arrows-alt{
+    display: none;
+}
+
+.full_screen .fas.fa-compress-arrows-alt{
+    display: none;
+}
+
+.full_screen.active .fas.fa-compress-arrows-alt{
+    display: inline-block;
 }
 
 .question_title{
@@ -328,17 +364,26 @@
     font-weight: bold;
     background: #eeeeee;
     display: flex;
-    align-items: center;
     gap: 10px;
+    overflow-x: scroll;
 }
 
-.question_options{
+.question_options,.showQuestions{
     padding: 0 15px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 10px;
     position: relative;
+    min-height: 100px;
+}
+
+.questio_container.active .showQuestions{
+    align-items: center;
+}
+
+.showQuestions{
+    padding: 0;
+    width: 100%;
 }
 
 .question_options label{
@@ -384,6 +429,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 50px;
 }
 
 .submit{
@@ -486,7 +532,7 @@
     background: #555; /* color of the scrollbar on hover */
   }
 
-#guessImage{
+#guessImage, #guessOutput{
     padding: 15px 10px;
     border: none;
     border-bottom: 2px solid #3f3f3f;
@@ -531,6 +577,7 @@
     backdrop-filter: blur(2px);
     background: #ffffff44;
     display: none;
+    z-index: 100;
 }
 
 @keyframes rotate {
@@ -555,3 +602,16 @@
 .load_question.active .circle{
   animation: rotate 1s linear infinite;
 }
+
+
+pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+    background: black;
+}
+
+.hljs {
+    color: #d4d4d4 !important;
+}
+

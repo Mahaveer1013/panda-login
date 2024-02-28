@@ -16,40 +16,53 @@ db.on('error', (err) => {
 
 const questionSchema = new mongoose.Schema({
     Question: String,
-    "Option A": String,
-    "Option B": String,
-    "Option C": String,
     Answer: String
 });
 
 const imageSchema = new mongoose.Schema({
-    image_url: String,
-    Answer: String
+    Image_url: String,
+    Image_name: String
 });
 
-const PQuestion = mongoose.model('PQuestion', questionSchema, "pquestion");
-const CQuestion = mongoose.model('CQuestion', questionSchema, "cquestion");
-const JQuestion = mongoose.model('JQuestion', questionSchema, "jquestion");
+// const Question = mongoose.model('Question', questionSchema); // Define Question model
+// const QuestionModel = mongoose.model('QuestionModel', questionSchema); // Define Question model
+// const Question = mongoose.model('Question', questionSchema, "question");
 const Image = mongoose.model('Image', imageSchema, "image");
 
 const teamSchema = new mongoose.Schema({
     team_name: String,
-    round_1: [
-        {question_id: mongoose.Schema.Types.ObjectId,Question: String,"Option A": String,"Option B": String,"Option C": String,Answer: String,},
-        {image_url :String, Answer: String},
-    ],
-    round_2: [
-        {question_id: mongoose.Schema.Types.ObjectId,Question: String,"Option A": String,"Option B": String,"Option C": String,Answer: String,},
-        {image_url :String, Answer: String},
-    ],
-    round_3: [
-        {question_id: mongoose.Schema.Types.ObjectId,Question: String,"Option A": String,"Option B": String,"Option C": String,Answer: String,},
-        {image_url :String, Answer: String},
-    ],
+    round1: [{
+        question_id: mongoose.Schema.Types.ObjectId,
+        Question: String,
+        Answer: String,
+    }],
+    round2: [{
+        question_id: mongoose.Schema.Types.ObjectId,
+        Question: String,
+        Answer: String,
+    }],
+    round3: [{
+        question_id: mongoose.Schema.Types.ObjectId,
+        Question: String,
+        Answer: String,
+    }],
+    round1_image: {
+        image_url: String,
+        Image_name: String,
+    },
+    round2_image: {
+        image_url: String,
+        Image_name: String,
+    },
+    round3_image: {
+        image_url: String,
+        Image_name: String,
+    },
     AnsweredQuestions: {type: [Boolean], default: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]},
     images_found: { type: Number, default: 0 },
     attempts: { type: Number, default: 0 },
-    score: { type: Number, default: 0 }
+    score: { type: Number, default: 0 },
+    currentRound:{type: String, default: "round1"}
 });
 
 const Team = mongoose.model('Team', teamSchema);
@@ -86,24 +99,37 @@ app.get('/login', async (req, res) => {
             if (existingTeam) {
                 // If the team exists, add the team ID to session and redirect to dashboard
                 req.session.teamId = existingTeam._id;
-                console.log("already exists")
+                console.log("Team already exists");
                 return res.redirect('/dashboard');
             }
 
-            // If the team does not exist, generate random questions and create a new team
-            const numberOfRandomQuestions = 16;
-            const PrandomQuestions = await PQuestion.aggregate([{ $sample: { size: numberOfRandomQuestions } }]);
-            const CrandomQuestions = await CQuestion.aggregate([{ $sample: { size: numberOfRandomQuestions } }]);
-            const JrandomQuestions = await JQuestion.aggregate([{ $sample: { size: numberOfRandomQuestions } }]);
+            // Generate random questions and images for each round
+            const numberOfRandomQuestions = 3;
+            const numberOfRandomImages = 3;
 
+            const randomRound1Questions = await fetchRandomQuestions('round1_questions', numberOfRandomQuestions);
+            const randomRound2Questions = await fetchRandomQuestions('round2_questions', numberOfRandomQuestions);
+            const randomRound3Questions = await fetchRandomQuestions('round3_questions', numberOfRandomQuestions);
+            const randomImages = await Image.aggregate([{ $sample: { size: numberOfRandomImages } }]);
+
+            // Create a new team with random questions and images
             const newTeam = new Team({
                 team_name: team_name,
-                round_1: [PrandomQuestions,["image_url 1","answer 1"]],
-                round_2: [CrandomQuestions,["image_url 2","answer 2"]],
-                round_3: [JrandomQuestions,["image_url 3","answer 3"]],
-                images_found: 0,
-                attempts: 0,
-                score: 0
+                round1: randomRound1Questions.map(question => ({ question_id: question._id, Question: question.Question, Answer: question.Answer })),
+                round2: randomRound2Questions.map(question => ({ question_id: question._id, Question: question.Question, Answer: question.Answer })),
+                round3: randomRound3Questions.map(question => ({ question_id: question._id, Question: question.Question, Answer: question.Answer })),
+                round1_image: {
+                    image_url: randomImages[0].Image_Url,
+                    Image_name: randomImages[0].Image_name
+                }, // Assuming randomImages is an array of 3 images
+                round2_image: {
+                    image_url: randomImages[1].Image_Url,
+                    Image_name: randomImages[1].Image_name
+                },
+                round3_image: {
+                    image_url: randomImages[2].Image_Url,
+                    Image_name: randomImages[2].Image_name
+                }
             });
 
             const savedTeam = await newTeam.save();
@@ -116,6 +142,20 @@ app.get('/login', async (req, res) => {
         }
     }
 });
+
+async function fetchRandomQuestions(round, numberOfRandomQuestions) {
+    const QuestionModel = mongoose.model(`${round}`, questionSchema);
+    const randomQuestions = await QuestionModel.aggregate([{ $sample: { size: numberOfRandomQuestions } }]);
+    return randomQuestions;
+}
+
+async function fetchQuestions(round, index) {
+    
+    const QuestionModel = mongoose.model(`${round}_questions`, questionSchema);
+    const randomQuestions = QuestionModel.findOne().skip(round).exec();
+    console.log(randomQuestions[index]);
+    return randomQuestions;
+}
 
 app.get("/dashboard", async (req, res) => {
     // Access teamId from session
@@ -138,11 +178,21 @@ app.get("/dashboard", async (req, res) => {
     }
 });
 
-app.get('/question/:index', async (req, res) => {
-    const index = req.params.index;
+app.get('/question/:round/:index', async (req, res) => {
+    const {round, index }= req.params;
+    const teamId = req.session.teamId;
     try {
-        const question = await Question.findOne().skip(index).exec();
-        if (question) {
+        const team = await Team.findById(teamId);
+        let question;
+        if (round == "round1") {
+            question = team.round1[index];
+        }else if (round == "round2") {
+            question =  team.round2[index];
+        }else{
+            question =  team.round3[index];
+        }
+
+        if (team) {
             res.json({ success: true, question: question });
         } else {
             res.status(404).json({ success: false, message: "Question not found" });

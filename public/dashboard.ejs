@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <!-- Font Awesome CSS via CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"  crossorigin="anonymous">
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <!-- Include languages for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/java.min.js"></script>
+  </head>
 <body>
     <div class="page">
         <div class="container">
@@ -152,15 +158,18 @@
                 </ul>
             </div>
             <div class="questio_container">
+                <button class="full_screen">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                    <i class="fas fa-compress-arrows-alt"></i>
+                </button>
                 <div class="question_title">
                     <i class="fas fa-question-circle"></i> <div class="question">Questions will appears here !</div>
                 </div>
-                <div class="load_question">
-                    <div class="circle"></div>
-                </div>
                 <div class="question_options">
-                    <div>
-
+                    <div class="load_question">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="showQuestions">
                         <br>
                         Your options to the related questions will appears here ! 
                         <br>
@@ -192,6 +201,6 @@
     
     <!-- <script src="js/dashboard.js"></script> -->
     <script src="js/question.js"></script>
-    
+   
 </body>
 </html>

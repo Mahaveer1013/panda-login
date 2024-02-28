@@ -3,12 +3,15 @@ let team_id = document.getElementById("team_id").value;
 let currentindex = 0;
 let masks = document.querySelectorAll('.mask');
 let questionContainer = document.querySelector('.questio_container .question');
-let optionsContainer = document.querySelector('.questio_container .question_options');
+let optionsContainer = document.querySelector('.questio_container .showQuestions');
 let submitButton = document.querySelector('.questio_container .buttons .submit');
 let quessButton = optionsContainer.querySelector(".optionsContainer");
 let quessInput = optionsContainer.querySelector("#guessImage");
 let closeguess = optionsContainer.querySelector(".closeguess");
 let currentQuestionResponse; // Variable to store the current question response
+let currentRound;
+let currentRoundImage;
+let team;
 let answeredQuestions = [
     false,
     false,
@@ -28,6 +31,26 @@ let answeredQuestions = [
     false
 ];
 
+let full_screen = document.querySelector(".full_screen");
+
+full_screen.addEventListener("click",()=>{
+    full_screen.classList.toggle("active");
+    full_screen.parentElement.classList.toggle("active");
+})
+
+setTimeout(() => {
+    if (currentRound == "round1") {
+        currentRoundImage = team.round1_image;
+    }else if (currentRound == "round2") {
+        currentRoundImage = team.round2_image;
+    }else{
+        currentRoundImage = team.round3_image;
+    }
+
+    document.querySelector(".image").setAttribute("src","/assets/img/"+(currentRoundImage.image_url));
+
+}, 500);
+
 
 let profile = document.querySelector(".profile");
 
@@ -45,17 +68,13 @@ side_button.addEventListener("click",()=>{
     main.classList.toggle("active");
 });
 
-if (JSON.parse(localStorage.getItem("answeredQuestions"))) {
-    answeredQuestions =  JSON.parse(localStorage.getItem("answeredQuestions"));
-}
-
-if (localStorage.getItem("currentindex")) {
-    currentindex = localStorage.getItem("currentindex");
-    console.log(currentindex);
-}
-
 function submitGuess(){
-    console.log(optionsContainer.querySelector("#guessImage").value)
+    if(optionsContainer.querySelector("#guessImage").value.trim() == currentRoundImage.Image_name){
+        alert("correct Guess");
+    }else{
+        alert("wrong Guess");
+        closeGuess()
+    }
 }
 
 function displayGuess(){
@@ -108,6 +127,10 @@ function getTeamDetails(teamid){
                 }
                 if (response.success) {
                     answeredQuestions = response.team.AnsweredQuestions;
+                    currentRound = response.team.currentRound;
+                    // currentRoundImage = response.team;
+                    team = response.team
+                    console.log(currentRoundImage);
                     document.querySelector(".imagefound").innerHTML = response.team.images_found
                     document.querySelector(".score").innerHTML = response.team.score
                     document.querySelector(".attempts").innerHTML = response.team.attempts
@@ -167,7 +190,7 @@ function sendScoreUpdate(teamId, increment) {
 function getQuestionDetails(index) {
     let xhr = new XMLHttpRequest();
     document.querySelector(".load_question").classList.add("active");
-    xhr.open('GET', '/question/' + index, true);
+    xhr.open('GET', '/question/'+ currentRound +'/' + index, true);
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
@@ -196,25 +219,18 @@ function getQuestionDetails(index) {
 
 // Function to display question details
 function displayQuestion(question) {
-    questionContainer.textContent = question.Question;
-    optionsContainer.innerHTML = '';
-
-    let optionKeys = ['Option A', 'Option B', 'Option C'];
-    optionKeys.forEach(function(key) {
-        let optionLabel = document.createElement('label');
-        let optionInput = document.createElement('input');
-        optionInput.type = 'radio';
-        optionInput.name = 'option';
-        optionInput.value = key;
-        optionInput.classList.add('radioBtn');
-        optionLabel.appendChild(optionInput);
-        optionLabel.appendChild(document.createTextNode(question[key]));
-        optionsContainer.appendChild(optionLabel);
-        optionsContainer.appendChild(document.createElement('br'));
-    });
+    questionContainer.innerHTML = `<pre><code class="python">${question.Question}</pre><code/>`;
+    optionsContainer.innerHTML = (`
+     <p style="width:100%">Guess the Output ❓</p>
+     <div>
+        <input type="text" name="guessOutput" id="guessOutput">
+     </div>
+     <p>${question.Answer}</p>
+    `);
 
     submitButton.style.display = "block"
     submitButton.disabled = false;
+    hljs.highlightAll();
 }
 
 function updateAnsweredQuestions(userId, questionIndex, value) {
@@ -257,10 +273,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle submission of the answer
     submitButton.onclick = function() {
         if (currentQuestionResponse) {
-            let selectedOption = optionsContainer.querySelector('input[name="option"]:checked');
+            let selectedOption = optionsContainer.querySelector('.question_options #guessOutput');
             if (selectedOption) {
-                let selectedValue = selectedOption.value;
-                if (selectedValue === currentQuestionResponse.question['Answer']) {
+                let selectedValue = selectedOption.value.trim();
+                if (selectedValue === currentQuestionResponse.question.Answer) {
                     sendScoreUpdate(team_id, 10);
                     displayGuess();
                     updateAnsweredQuestions(team_id, currentindex, true);
