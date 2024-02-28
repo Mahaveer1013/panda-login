@@ -22,18 +22,30 @@ const questionSchema = new mongoose.Schema({
     Answer: String
 });
 
-const Question = mongoose.model('Question', questionSchema, "question");
+const imageSchema = new mongoose.Schema({
+    image_url: String,
+    Answer: String
+});
+
+const PQuestion = mongoose.model('PQuestion', questionSchema, "pquestion");
+const CQuestion = mongoose.model('CQuestion', questionSchema, "cquestion");
+const JQuestion = mongoose.model('JQuestion', questionSchema, "jquestion");
+const Image = mongoose.model('Image', imageSchema, "image");
 
 const teamSchema = new mongoose.Schema({
     team_name: String,
-    questions: [{
-        question_id: mongoose.Schema.Types.ObjectId,
-        Question: String,
-        "Option A": String,
-        "Option B": String,
-        "Option C": String,
-        Answer: String,
-    }],
+    round_1: [
+        {question_id: mongoose.Schema.Types.ObjectId,Question: String,"Option A": String,"Option B": String,"Option C": String,Answer: String,},
+        {image_url :String, Answer: String},
+    ],
+    round_2: [
+        {question_id: mongoose.Schema.Types.ObjectId,Question: String,"Option A": String,"Option B": String,"Option C": String,Answer: String,},
+        {image_url :String, Answer: String},
+    ],
+    round_3: [
+        {question_id: mongoose.Schema.Types.ObjectId,Question: String,"Option A": String,"Option B": String,"Option C": String,Answer: String,},
+        {image_url :String, Answer: String},
+    ],
     AnsweredQuestions: {type: [Boolean], default: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]},
     images_found: { type: Number, default: 0 },
     attempts: { type: Number, default: 0 },
@@ -80,11 +92,15 @@ app.get('/login', async (req, res) => {
 
             // If the team does not exist, generate random questions and create a new team
             const numberOfRandomQuestions = 16;
-            const randomQuestions = await Question.aggregate([{ $sample: { size: numberOfRandomQuestions } }]);
+            const PrandomQuestions = await PQuestion.aggregate([{ $sample: { size: numberOfRandomQuestions } }]);
+            const CrandomQuestions = await CQuestion.aggregate([{ $sample: { size: numberOfRandomQuestions } }]);
+            const JrandomQuestions = await JQuestion.aggregate([{ $sample: { size: numberOfRandomQuestions } }]);
 
             const newTeam = new Team({
                 team_name: team_name,
-                questions: randomQuestions,
+                round_1: [PrandomQuestions,["image_url 1","answer 1"]],
+                round_2: [CrandomQuestions,["image_url 2","answer 2"]],
+                round_3: [JrandomQuestions,["image_url 3","answer 3"]],
                 images_found: 0,
                 attempts: 0,
                 score: 0
@@ -133,6 +149,21 @@ app.get('/question/:index', async (req, res) => {
         }
     } catch (error) {
         console.error("Error fetching question:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
+
+app.get('/details/:team_id', async (req, res) => {
+    const team_id = req.params.team_id; // Corrected from req.params.index to req.params.team_id
+    try {
+        const team = await Team.findById(team_id);
+        if (team) {
+            res.status(200).json({ success: true, team: team }); // Corrected from res.sendStatus(200).json(...)
+        } else {
+            res.status(404).json({ success: false, message: "Team not found" });
+        }
+    } catch (error) {
+        console.error("Error fetching team details:", error); // Corrected from "Error fetching question"
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 });

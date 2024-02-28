@@ -90,7 +90,42 @@ function checkAnswers(){
     })
 }
 
-checkAnswers()
+function getTeamDetails(teamid){
+    let xhr = new XMLHttpRequest();
+    document.querySelector(".load_question").classList.add("active");
+    xhr.open('GET', '/details/' + teamid, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                let response;
+                try {
+                    response = JSON.parse(xhr.responseText);
+                    console.log("Response:", response);
+                    document.querySelector(".load_question").classList.remove("active");
+                } catch (error) {
+                    console.error("Error parsing response:", error);
+                    return;
+                }
+                if (response.success) {
+                    answeredQuestions = response.team.AnsweredQuestions;
+                    document.querySelector(".imagefound").innerHTML = response.team.images_found
+                    document.querySelector(".score").innerHTML = response.team.score
+                    document.querySelector(".attempts").innerHTML = response.team.attempts
+                    checkAnswers()
+                    console.log(answeredQuestions);
+                } else {
+                    console.error("Error:", response.message);
+                }
+            } else {
+                console.error("Error:", xhr.status);
+            }
+        }
+    };
+    xhr.send();
+}
+
+getTeamDetails(team_id);
+
 
 // Function to send attempt update
 function sendAttemptUpdate(teamId) {
@@ -200,9 +235,7 @@ function updateAnsweredQuestions(userId, questionIndex, value) {
     })
     .then(updatedUser => {
         // Optionally, handle the response from the backend
-        answeredQuestions = (updatedUser.AnsweredQuestions);
-        localStorage.setItem("answeredQuestions",JSON.stringify(answeredQuestions));
-        checkAnswers();
+        getTeamDetails(updatedUser._id);
     })
     .catch(error => {
         console.error('Error updating answered questions:', error);
@@ -216,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
         mask.addEventListener('click', function() {
             console.log("Index:", index);
             currentindex = index;
-            localStorage.setItem("currentindex",currentindex)
+            // localStorage.setItem("currentindex",currentindex);
             getQuestionDetails(index);
         });
     });
